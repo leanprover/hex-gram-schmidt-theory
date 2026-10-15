@@ -7,7 +7,7 @@ Authors: Kim Morrison
 module
 
 public import HexGramSchmidt.Int
-public import HexBareissMathlib
+public import HexBareissTheory
 
 public section
 
@@ -983,7 +983,7 @@ private theorem gramDet_rat_eq_progressMatrix_zero_det (b : Matrix Int n m)
   have hdet_int :
       Matrix.det (GramSchmidt.leadingGramMatrixInt b k hk) =
         Int.ofNat (gramDet b k hk) := by
-    rw [gramDet, HexMatrixMathlib.bareiss_eq_mathlib_det, ← HexMatrixMathlib.det_eq]
+    rw [gramDet, HexMatrixTheory.bareiss_eq_mathlib_det, ← HexMatrixTheory.det_eq]
     exact (Int.toNat_of_nonneg (leadingGramMatrixInt_det_nonneg b k hk)).symm
   have hstep1 : ((gramDet b k hk : Int) : Rat) =
       ((Matrix.det (GramSchmidt.leadingGramMatrixInt b k hk) : Int) : Rat) := by

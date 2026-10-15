@@ -6,8 +6,8 @@ Authors: Kim Morrison
 
 module
 
-public import HexGramSchmidtMathlib.Int.Swap
-import all HexGramSchmidtMathlib.Int.Swap
+public import HexGramSchmidtTheory.Int.Swap
+import all HexGramSchmidtTheory.Int.Swap
 
 public section
 
@@ -214,7 +214,7 @@ theorem scaledCoeffMatrix_rowAdd_pivot_det
 /-- When the modified row index `k` lies outside the leading `t`-prefix
 (`t ≤ k.val`), the leading Gram matrix of `Matrix.rowAdd b j k c` agrees with
 that of `b`. Internal support lemma for the row-add determinant theorem in
-`HexGramSchmidtMathlib.Int`. -/
+`HexGramSchmidtTheory.Int`. -/
 theorem leadingGramMatrixInt_rowAdd_outside
     (b : Matrix Int n m) (j k : Fin n) (c : Int) (t : Nat) (ht : t ≤ n)
     (hkt : t ≤ k.val) :
@@ -371,7 +371,7 @@ private theorem leadingGramMatrixInt_rowAdd_entry_inside
 (`k.val < t`), the leading Gram matrix of `Matrix.rowAdd b j k c` agrees with
 the row-and-column-add of the original leading Gram matrix at the lifted
 `Fin t` indices `jt`, `kt`. Internal support lemma for the row-add
-determinant theorem in `HexGramSchmidtMathlib.Int`. -/
+determinant theorem in `HexGramSchmidtTheory.Int`. -/
 theorem leadingGramMatrixInt_rowAdd_inside
     (b : Matrix Int n m) (j k : Fin n) (c : Int) (t : Nat) (ht : t ≤ n)
     (hjk : j.val < k.val) (hkt : k.val < t) :
@@ -432,8 +432,8 @@ theorem gramDet_rowAdd_earlier
     -- executable determinant surface visible to `det_colAdd` / `det_rowAdd`.
     have hbareiss_det : ∀ (M : Hex.Matrix Int t t),
         Hex.Matrix.bareiss M = Hex.Matrix.det M := fun M =>
-      (HexMatrixMathlib.bareiss_eq_mathlib_det M).trans
-        (HexMatrixMathlib.det_eq M).symm
+      (HexMatrixTheory.bareiss_eq_mathlib_det M).trans
+        (HexMatrixTheory.det_eq M).symm
     rw [hbareiss_det, hbareiss_det]
     -- Indices and inequality between `jt` and `kt` in `Fin t`.
     have hjt_ne_kt : (⟨j.val, Nat.lt_trans hjk hkt⟩ : Fin t) ≠ ⟨k.val, hkt⟩ := by
@@ -609,9 +609,9 @@ theorem scaledCoeffs_rowAdd_above_pivot (b : Matrix Int n m) (j k : Fin n)
 /-! # Determinant-backed independence
 
 These determinant-positivity lemmas for `gramDet` live in
-`HexGramSchmidtMathlib` because their proofs identify `gramDet` with the
+`HexGramSchmidtTheory` because their proofs identify `gramDet` with the
 Leibniz determinant of the leading Gram matrix via the composition of
-`HexMatrixMathlib.bareiss_eq_mathlib_det` and `HexMatrixMathlib.det_eq.symm`
+`HexMatrixTheory.bareiss_eq_mathlib_det` and `HexMatrixTheory.det_eq.symm`
 (packaged here as `leadingGramMatrixInt_det_eq_gramDet_int`). Callers that
 already have a determinant lemma for a special matrix family can produce the
 public `independent` predicate stated over Mathlib-free computed data. -/
@@ -768,7 +768,7 @@ prefix of the source matrix. Stated with `k` as a free variable so that
 `subst` can replace the let-bound projection with a fresh name. -/
 private theorem bareissNoPivotInvariant_diag_eq
     {n : Nat} (M : Matrix Int n n) (state : Matrix.BareissState Int n) (k : Nat)
-    (hinv : HexMatrixMathlib.BareissNoPivotInvariant M state)
+    (hinv : HexMatrixTheory.BareissNoPivotInvariant M state)
     (hsk : k = state.step) (hk : k < n) :
     state.matrix[(⟨k, hk⟩ : Fin n)][(⟨k, hk⟩ : Fin n)] =
       Matrix.det (Matrix.principalSubmatrix M (k + 1) (Nat.succ_le_of_lt hk)) := by
@@ -779,7 +779,7 @@ private theorem bareissNoPivotInvariant_diag_eq
           (⟨state.step, hk⟩ : Fin n) (⟨state.step, hk⟩ : Fin n)) :=
     hinv.trailing_eq hk (⟨state.step, hk⟩ : Fin n) (⟨state.step, hk⟩ : Fin n)
       (Nat.le_refl _) (Nat.le_refl _)
-  rw [HexMatrixMathlib.borderedMinor_corner_eq_principalSubmatrix M state.step hk] at h_trail
+  rw [HexMatrixTheory.borderedMinor_corner_eq_principalSubmatrix M state.step hk] at h_trail
   exact h_trail
 
 /-- Identification with the Mathlib leading-prefix determinant: from a partial
@@ -794,12 +794,12 @@ private theorem principalSubmatrix_det_eq_zero
   obtain ⟨h_none, h_step, h_zero⟩ :=
     noPivotLoop_prefix_state_at_singular M fuel s hs h_sing
   -- Apply the noPivotLoop_invariant variant: S satisfies BareissNoPivotInvariant.
-  have hinv_init : HexMatrixMathlib.BareissNoPivotInvariant M
+  have hinv_init : HexMatrixTheory.BareissNoPivotInvariant M
       (Matrix.noPivotInitialState M) :=
-    HexMatrixMathlib.bareissNoPivotInvariant_initial M
-  have hinv_S : HexMatrixMathlib.BareissNoPivotInvariant M
+    HexMatrixTheory.bareissNoPivotInvariant_initial M
+  have hinv_S : HexMatrixTheory.BareissNoPivotInvariant M
       (Matrix.noPivotLoop s (Matrix.noPivotInitialState M)) :=
-    HexMatrixMathlib.noPivotLoop_invariant_of_singularStep_eq_none M s
+    HexMatrixTheory.noPivotLoop_invariant_of_singularStep_eq_none M s
       (Matrix.noPivotInitialState M) hinv_init h_none
   -- Use Nat.lt_of_succ_le hs as the bound throughout to match the helper's output type.
   -- Specialize the diagonal-corner helper: matrix[⟨s, _⟩][⟨s, _⟩] = det(principalSubmatrix M (s+1) _).
@@ -844,7 +844,7 @@ leading Gram prefix is zero.
 This is the supporting lemma needed by the singular branch of the
 `gramDetVecEntry_eq_principalSubmatrix_bareiss` placeholder: both sides vanish in
 this case, and this lemma supplies the right-hand side. The proof composes the
-new lemma `HexMatrixMathlib.noPivotLoop_invariant_of_singularStep_eq_none`
+new lemma `HexMatrixTheory.noPivotLoop_invariant_of_singularStep_eq_none`
 (to identify `det(principalSubmatrix _ (s+1)) = 0` at the moment of singularity) with
 the unconditional `gramDet_eq_prod_normSq_uncond` and the multiplicative
 succession `gramSchmidtNormProduct_succ` to propagate zero from `s + 1` to
@@ -910,7 +910,7 @@ theorem principalSubmatrix_gram_bareiss_eq_zero_of_singularStep_lt
           Matrix.principalSubmatrix (Matrix.gramMatrix b) (r + 1) hr1 :=
       GramSchmidt.leadingGramMatrixInt_eq_principalSubmatrix_gram b (r + 1) hr1
     rw [← h_lead_eq_r]; exact h_det_lead_r1_zero
-  rw [HexMatrixMathlib.bareiss_eq_det]
+  rw [HexMatrixTheory.bareiss_eq_det]
   exact h_det_prefix_r1_zero
 
 /-- The no-pivot
@@ -918,7 +918,7 @@ Bareiss pass over the full Gram matrix records, at slot `r + 1`, the same
 leading-prefix determinant as the public row-pivoted Bareiss surface on that
 prefix.
 
-This theorem lives in `HexGramSchmidtMathlib` because the proof path for the
+This theorem lives in `HexGramSchmidtTheory` because the proof path for the
 singular branch identifies the executable determinant with Mathlib's Leibniz
 determinant. Mathlib-free callers should use the executable `gramDet` API
 instead of depending on this Bareiss-facing statement. -/

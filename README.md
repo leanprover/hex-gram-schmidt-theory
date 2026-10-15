@@ -1,16 +1,16 @@
-# hex-gram-schmidt-mathlib
+# hex-gram-schmidt-theory
 
 Part of [`hex`](https://github.com/kim-em/hex-dev), a computer algebra
 library for Lean 4. The aim is fast executable code, fully verified, built
 with spec-driven development.
 
-`hex-gram-schmidt-mathlib` is the Mathlib bridge for
+`hex-gram-schmidt-theory` is the theory companion of
 [`hex-gram-schmidt`](https://github.com/leanprover/hex-gram-schmidt). It
 identifies the executable dense-matrix Gram-Schmidt basis with Mathlib's
 `InnerProductSpace.gramSchmidt`, and the fraction-free integer
 coefficients with Bareiss determinants. It depends on
 [`hex-gram-schmidt`](https://github.com/leanprover/hex-gram-schmidt),
-[`hex-bareiss-mathlib`](https://github.com/leanprover/hex-bareiss-mathlib),
+[`hex-bareiss-theory`](https://github.com/leanprover/hex-bareiss-theory),
 and Mathlib.
 
 # Quickstart
@@ -19,13 +19,13 @@ Add to your `lakefile.toml`:
 
 ```toml
 [[require]]
-name = "hex-gram-schmidt-mathlib"
-git = "https://github.com/leanprover/hex-gram-schmidt-mathlib.git"
+name = "hex-gram-schmidt-theory"
+git = "https://github.com/leanprover/hex-gram-schmidt-theory.git"
 rev = "main"
 ```
 
 ```lean
-import HexGramSchmidtMathlib
+import HexGramSchmidtTheory
 
 open Hex
 

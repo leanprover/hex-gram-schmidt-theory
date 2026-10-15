@@ -6,7 +6,7 @@ Authors: Kim Morrison
 
 module
 
-public import HexGramSchmidtMathlib.Int
+public import HexGramSchmidtTheory.Int
 public import HexGramSchmidt.Update
 
 public section
@@ -17,13 +17,13 @@ Mathlib-side row-operation update theorems for `hex-gram-schmidt`.
 The theorems in this module relate `gramDet` / `scaledCoeffs` under the
 size-reduce (earlier-row-add) and adjacent-swap row operations. Their
 statements are Hex-local, but their proofs cross the Mathlib boundary by
-composing `HexMatrixMathlib.bareiss_eq_mathlib_det` with
-`HexMatrixMathlib.det_eq.symm` through `gramDet_rowAdd_earlier` and the
+composing `HexMatrixTheory.bareiss_eq_mathlib_det` with
+`HexMatrixTheory.det_eq.symm` through `gramDet_rowAdd_earlier` and the
 matrix-side `gramDet_adjacentSwap_of_ne` equation respectively. These
-determinant-correspondence proofs therefore live in the Mathlib bridge. The size-reduce
+determinant-correspondence proofs therefore live in the theory companion. The size-reduce
 theorems are thin wrappers around
 `scaledCoeffs_rowAdd_pivot/lower/other_row/above_pivot` and
-`gramDet_rowAdd_earlier`, which live in `HexGramSchmidtMathlib/Int.lean`.
+`gramDet_rowAdd_earlier`, which live in `HexGramSchmidtTheory/Int.lean`.
 -/
 
 namespace Hex
@@ -36,8 +36,8 @@ namespace GramSchmidt.Int
 so the theorems below specialise the earlier-row-add updates in
 `HexGramSchmidt/Int.lean` to the LLL size-reduce row operation. They are kept
 in this Mathlib-side module because their proof path composes
-`HexMatrixMathlib.bareiss_eq_mathlib_det` with
-`HexMatrixMathlib.det_eq.symm`. -/
+`HexMatrixTheory.bareiss_eq_mathlib_det` with
+`HexMatrixTheory.det_eq.symm`. -/
 
 /-- The size-reduce row operation leaves every leading Gram determinant
 unchanged: `sizeReduce b j k r` adds `-r` times the earlier row `j` to the
@@ -433,8 +433,8 @@ theorem gramDet_adjacentSwap_of_ne (b : Matrix Int n m) (k : Fin n) (hk : 0 < k.
     -- `det_rowSwap_transpose_rowSwap_transpose`.
     have hbareiss_det : ∀ (M : Hex.Matrix Int t t),
         Hex.Matrix.bareiss M = Hex.Matrix.det M := fun M =>
-      (HexMatrixMathlib.bareiss_eq_mathlib_det M).trans
-        (HexMatrixMathlib.det_eq M).symm
+      (HexMatrixTheory.bareiss_eq_mathlib_det M).trans
+        (HexMatrixTheory.det_eq M).symm
     rw [hbareiss_det, hbareiss_det]
     apply det_rowSwap_transpose_rowSwap_transpose
     intro h

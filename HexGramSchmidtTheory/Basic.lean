@@ -21,7 +21,7 @@ orthogonalization process.
 -/
 
 namespace Hex
-namespace GramSchmidtMathlib
+namespace GramSchmidtTheory
 
 /-- View a rational dense row as a vector in Mathlib's standard Euclidean
 space on `Fin m`. -/
@@ -237,5 +237,5 @@ theorem int_basis_row_eq_gramSchmidt (b : Matrix Int n m) (i : Fin n) :
   simp only [intRowFamily, castIntMatrix, Hex.GramSchmidt.Int.basis, Hex.GramSchmidt.Rat.basis] at key ⊢
   exact key
 
-end GramSchmidtMathlib
+end GramSchmidtTheory
 end Hex

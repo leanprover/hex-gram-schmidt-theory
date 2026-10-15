@@ -6,8 +6,8 @@ Authors: Kim Morrison
 
 module
 
-public import HexGramSchmidtMathlib.Int.GramDet
-import all HexGramSchmidtMathlib.Int.GramDet
+public import HexGramSchmidtTheory.Int.GramDet
+import all HexGramSchmidtTheory.Int.GramDet
 
 public section
 
@@ -148,7 +148,7 @@ private theorem scaledCoeffMatrix_det_eq_gramDet_mul_coeffs
       have hdet_int :
           Matrix.det (GramSchmidt.leadingGramMatrixInt b (j + 1) hjsuc) =
             Int.ofNat (gramDet b (j + 1) hjsuc) := by
-        rw [gramDet, HexMatrixMathlib.bareiss_eq_mathlib_det, ← HexMatrixMathlib.det_eq]
+        rw [gramDet, HexMatrixTheory.bareiss_eq_mathlib_det, ← HexMatrixTheory.det_eq]
         exact (Int.toNat_of_nonneg
           (leadingGramMatrixInt_det_nonneg b (j + 1) hjsuc)).symm
       rw [hdet_int]
@@ -309,13 +309,13 @@ private theorem matrix_entry_eq_of_eq {n m : Nat} (M : Hex.Matrix Int n m)
     M[i][j] = M[i'][j'] := by
   subst hi; subst hj; rfl
 
-/-- Local copy of `HexMatrixMathlib.trailing_eq_at_step` (private there):
+/-- Local copy of `HexMatrixTheory.trailing_eq_at_step` (private there):
 re-state `BareissNoPivotInvariant.trailing_eq` with the step value supplied
 externally so the dependent bordered-minor type matches the desired
 `s = state.step` substitution cleanly. -/
 theorem trailing_eq_at_step_local
     {n' : Nat} {M : Hex.Matrix Int n' n'} {state : Matrix.BareissState Int n'}
-    (hinv : HexMatrixMathlib.BareissNoPivotInvariant M state)
+    (hinv : HexMatrixTheory.BareissNoPivotInvariant M state)
     (s : Nat) (hs : s < n') (hstep : s = state.step)
     (a c : Fin n') (hsa : s ≤ a.val) (hsc : s ≤ c.val) :
     state.matrix[a][c] =
@@ -786,12 +786,12 @@ theorem bareissGramCanonicalCoeff_eq_borderedMinor_aug
       (Matrix.noPivotInitialState (augmentedGram b a)) rfl (by
         show 0 + fuel + 1 ≤ n + 1; omega) h_sing_aug
     simpa [Matrix.noPivotInitialState] using h
-  have h_inv : HexMatrixMathlib.BareissNoPivotInvariant (augmentedGram b a)
+  have h_inv : HexMatrixTheory.BareissNoPivotInvariant (augmentedGram b a)
       (Matrix.noPivotLoop fuel (Matrix.noPivotInitialState (augmentedGram b a))) :=
-    HexMatrixMathlib.noPivotLoop_invariant_of_singularStep_eq_none
+    HexMatrixTheory.noPivotLoop_invariant_of_singularStep_eq_none
       (augmentedGram b a) fuel
       (Matrix.noPivotInitialState (augmentedGram b a))
-      (HexMatrixMathlib.bareissNoPivotInvariant_initial (augmentedGram b a)) h_sing_aug
+      (HexMatrixTheory.bareissNoPivotInvariant_initial (augmentedGram b a)) h_sing_aug
   -- Apply trailing_eq_at_step with `s := fuel` and `hstep := h_step_aug_eq_fuel.symm`.
   have h_step_lt : fuel < n + 1 := by omega
   have h_step_le_i : fuel ≤ (⟨i.val, Nat.lt_succ_of_lt i.isLt⟩ : Fin (n + 1)).val := hfuel
@@ -846,7 +846,7 @@ so the dependent `principalSubmatrix` type matches the desired `s = state.step`
 substitution cleanly. -/
 theorem prevPivot_eq_at_step_local
     {n' : Nat} {M : Hex.Matrix Int n' n'} {state : Matrix.BareissState Int n'}
-    (hinv : HexMatrixMathlib.BareissNoPivotInvariant M state)
+    (hinv : HexMatrixTheory.BareissNoPivotInvariant M state)
     (s : Nat) (hs : s ≤ n') (hstep : s = state.step) :
     state.prevPivot = Hex.Matrix.det (Hex.Matrix.principalSubmatrix M s hs) := by
   subst hstep
@@ -920,10 +920,10 @@ def StepWitness.ofGram (b : Matrix Int n m) :
   -- Bridge state.prevPivot to stateA.prevPivot (h_prev_A goes the other way).
   rw [← h_prev_A]
   -- Bareiss invariant on the augmented loop at fuel.
-  have h_inv : HexMatrixMathlib.BareissNoPivotInvariant (augmentedGram b a) stateA :=
-    HexMatrixMathlib.noPivotLoop_invariant_of_singularStep_eq_none
+  have h_inv : HexMatrixTheory.BareissNoPivotInvariant (augmentedGram b a) stateA :=
+    HexMatrixTheory.noPivotLoop_invariant_of_singularStep_eq_none
       (augmentedGram b a) fuel _
-      (HexMatrixMathlib.bareissNoPivotInvariant_initial (augmentedGram b a))
+      (HexMatrixTheory.bareissNoPivotInvariant_initial (augmentedGram b a))
       h_sing_A
   have h_stateA_step : stateA.step = fuel := h_step_A.trans h_step_eq_fuel
   -- Rewrite each stateA entry and the prevPivot as bordered-minor determinants.
@@ -947,7 +947,7 @@ def StepWitness.ofGram (b : Matrix Int n m) :
         h_fuel_succ_le_i h_prefix_none_succ]
   -- Desnanot-Jacobi on the augmented matrix at level `fuel`.
   have hdj :=
-    HexMatrixMathlib.desnanot_jacobi_borderedMinor (augmentedGram b a) fuel
+    HexMatrixTheory.desnanot_jacobi_borderedMinor (augmentedGram b a) fuel
       hfuel_lt_naug hfuel_succ_lt_naug iA L h_fuel_lt_iA h_fuel_lt_L
   -- The K positions in hdj are `⟨fuel, _⟩ : Fin (n + 1)`; via Fin.ext they
   -- equal `kA` (whose value is `state.step = fuel`).
@@ -1113,9 +1113,9 @@ theorem scaledCoeffs_lower_eq_det_scaledCoeffMatrix
         exact (Matrix.bareiss_eq_noPivotLoop_last_of_no_singular
           (GramSchmidt.scaledCoeffMatrix b i j hji) h_sc_nonsing).symm
       rw [h_lhs]
-      exact_mod_cast (HexMatrixMathlib.bareiss_eq_mathlib_det
+      exact_mod_cast (HexMatrixTheory.bareiss_eq_mathlib_det
           (GramSchmidt.scaledCoeffMatrix b i j hji)).trans
-        (HexMatrixMathlib.det_eq (GramSchmidt.scaledCoeffMatrix b i j hji)).symm
+        (HexMatrixTheory.det_eq (GramSchmidt.scaledCoeffMatrix b i j hji)).symm
   | some s =>
       have hsj : s < j.val := by
         have h := noPivotLoop_singularStep_lt j.val
@@ -1144,9 +1144,9 @@ theorem scaledCoeffs_eq_scaledCoeffMatrix_bareiss
       Matrix.det (GramSchmidt.scaledCoeffMatrix b i j hji) := by
     exact_mod_cast scaledCoeffs_lower_eq_det_scaledCoeffMatrix b i j hji
   rw [h_det]
-  exact ((HexMatrixMathlib.bareiss_eq_mathlib_det
+  exact ((HexMatrixTheory.bareiss_eq_mathlib_det
         (GramSchmidt.scaledCoeffMatrix b i j hji)).trans
-      (HexMatrixMathlib.det_eq (GramSchmidt.scaledCoeffMatrix b i j hji)).symm).symm
+      (HexMatrixTheory.det_eq (GramSchmidt.scaledCoeffMatrix b i j hji)).symm).symm
 
 /-- Below the diagonal, the rational image of the integer scaled
 Gram-Schmidt coefficient factors as `gramDet b (j+1) * coeffs[i,j]`. Derived

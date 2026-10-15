@@ -6,8 +6,8 @@ Authors: Kim Morrison
 
 module
 
-public import HexGramSchmidtMathlib.Int.Augmented
-import all HexGramSchmidtMathlib.Int.Augmented
+public import HexGramSchmidtTheory.Int.Augmented
+import all HexGramSchmidtTheory.Int.Augmented
 
 public section
 
@@ -621,9 +621,9 @@ theorem scaledCoeffs_eq_scaledCoeffMatrix_det
       Matrix.det (GramSchmidt.scaledCoeffMatrix b i j hji) := by
   rw [scaledCoeffs_eq_scaledCoeffMatrix_bareiss]
   exact
-    (HexMatrixMathlib.bareiss_eq_mathlib_det
+    (HexMatrixTheory.bareiss_eq_mathlib_det
         (GramSchmidt.scaledCoeffMatrix b i j hji)).trans
-      (HexMatrixMathlib.det_eq (GramSchmidt.scaledCoeffMatrix b i j hji)).symm
+      (HexMatrixTheory.det_eq (GramSchmidt.scaledCoeffMatrix b i j hji)).symm
 
 
 /-- Conditional form of the leading Gram determinant identity. The remaining
@@ -635,7 +635,7 @@ theorem leadingGramMatrixInt_det_eq_gramDet_int_of_nonneg
     (hdet : 0 ≤ Matrix.det (GramSchmidt.leadingGramMatrixInt b t ht)) :
     Matrix.det (GramSchmidt.leadingGramMatrixInt b t ht) =
       Int.ofNat (gramDet b t ht) := by
-  rw [gramDet, HexMatrixMathlib.bareiss_eq_mathlib_det, ← HexMatrixMathlib.det_eq]
+  rw [gramDet, HexMatrixTheory.bareiss_eq_mathlib_det, ← HexMatrixTheory.det_eq]
   exact (Int.toNat_of_nonneg hdet).symm
 
 /-- The public `Nat` Gram determinant casts back to the signed determinant of
@@ -669,7 +669,7 @@ theorem scaledCoeffs_diag (b : Matrix Int n m) (i : Nat) (hi : i < n) :
             (Matrix.principalSubmatrix (Matrix.gramMatrix b) (i + 1) hk) =
           Matrix.det (GramSchmidt.leadingGramMatrixInt b (i + 1) hk) := by
       rw [← GramSchmidt.leadingGramMatrixInt_eq_principalSubmatrix_gram]
-      exact HexMatrixMathlib.bareiss_eq_det
+      exact HexMatrixTheory.bareiss_eq_det
         (GramSchmidt.leadingGramMatrixInt b (i + 1) hk)
     rw [hbareiss_eq]
     exact leadingGramMatrixInt_det_nonneg b (i + 1) hk
@@ -677,10 +677,10 @@ theorem scaledCoeffs_diag (b : Matrix Int n m) (i : Nat) (hi : i < n) :
 /-- The leading executable Gram determinants of a square upper-triangular
 integer matrix with strictly positive diagonal are positive.
 
-This theorem lives in `HexGramSchmidtMathlib`: its proof identifies the
+This theorem lives in `HexGramSchmidtTheory`: its proof identifies the
 executable `gramDet` with the Leibniz determinant of the leading Gram matrix
-via the composition of `HexMatrixMathlib.bareiss_eq_mathlib_det` and
-`HexMatrixMathlib.det_eq.symm`. -/
+via the composition of `HexMatrixTheory.bareiss_eq_mathlib_det` and
+`HexMatrixTheory.det_eq.symm`. -/
 theorem gramDet_pos_of_upperTriangular_pos_diag
     {n : Nat} (M : Matrix Int n n)
     (hzero : ∀ i j : Fin n, j.val < i.val -> M[i][j] = 0)

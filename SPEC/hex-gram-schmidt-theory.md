@@ -1,4 +1,4 @@
-# hex-gram-schmidt-mathlib (depends on hex-gram-schmidt + Mathlib)
+# hex-gram-schmidt-theory (depends on hex-gram-schmidt + Mathlib)
 
 Proves that `GramSchmidt.Int.basis` corresponds to Mathlib's
 `gramSchmidt`. Mathlib's version works over inner product spaces and
